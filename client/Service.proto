@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package main;
+
+service CustomerService {
+    rpc Authorize (RequestAuthorize) returns (ResponseAuthorize);
+    rpc Connect (RequestConnect) returns (stream Event);
+    rpc Say (CommandSay) returns (None);
+
+}
+
+message None {}
+
+message RequestAuthorize {
+    string name = 1;
+}
+
+message ResponseAuthorize {
+    bytes session_id = 1;
+}
+
+message RequestConnect {
+    bytes session_id = 1;
+}
+
+message CommandSay {
+    string sourceName = 1;
+    Message message = 2;
+    string targetName = 3;
+}
+
+enum MessageType{
+    REQUEST_MESSAGE = 0;
+    REPONSE_MESSAGE = 1;
+}
+
+// it will be response as well as request.
+
+message Message{
+    MessageType messageType = 1;
+    string command = 2;
+}
+
+
+message Event {
+    oneof Status {
+        EventNone none = 1;
+        EventJoin join = 2;
+        EventLeave leave = 3;
+        EventLog log = 4;
+    }
+}
+
+message EventNone {}
+
+message EventJoin {
+    string name = 1;
+}
+
+message EventLeave {
+    string name = 1;
+}
+
+message EventLog {
+    string name = 1;
+    Message message = 2;
+}

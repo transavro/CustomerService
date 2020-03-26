@@ -39,8 +39,7 @@ func main() {
 		log.Fatalln("authorize:", err)
 	}
 
-	log.Printf("%s == SessionID ==>%s",name,  fmt.Sprintln(string(sid)))
-
+	log.Printf("%s == SessionID ==>%s", name, fmt.Sprintln(string(sid)))
 
 	events, err := Connect(client, sid)
 	if err != nil {
@@ -69,36 +68,16 @@ func main() {
 	fmt.Println("---------------------")
 	for {
 		fmt.Print("-> ")
-		message , _ = reader.ReadString('\n')
+		message, _ = reader.ReadString('\n')
 		// convert CRLF to LF
-		message  = strings.Replace(message, "\n", "", -1)
+		message = strings.Replace(message, "\n", "", -1)
 		log.Printf("===>%s<===", message)
 		serverMsg := new(Message)
 		serverMsg.MessageType = MessageType_REQUEST_MESSAGE
 		serverMsg.Command = message
-		err := Say(client, name, "70:2e:d9:55:44:33" , serverMsg)
+		err := Say(client, name, "70:2e:d9:55:44:33", serverMsg)
 		if err != nil {
 			log.Fatalln("say:", err)
 		}
-
-		//fmt.Print("> ")
-		//if n, err := fmt.Scanln(&message); err == io.EOF {
-		//	return
-		//} else if n > 0 {
-		//	log.Printf("===>%s<===", message)
-		//	serverMsg := new(Message)
-		//	serverMsg.MessageType = MessageType_REQUEST_MESSAGE
-		//	serverMsg.Command = message
-		//	err := Say(client, name, "70:2e:d9:55:44:33" , serverMsg)
-		//	if err != nil {
-		//		log.Fatalln("say:", err)
-		//	}
-		//}
-
-
 	}
 }
-
-
-
-///sys/class/net/eth0/address

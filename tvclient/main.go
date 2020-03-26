@@ -7,8 +7,6 @@ import (
 	"os/exec"
 )
 
-
-
 func main() {
 
 	conn, err := grpc.Dial("192.168.0.106:5000", grpc.WithInsecure())
@@ -19,9 +17,8 @@ func main() {
 	client := NewCustomerServiceClient(conn)
 
 	var tvEmac string
-	//ot , _ := exec.Command("sh", "-c", "cat /sys/class/net/eth0/address").Output()
-	//tvEmac = string(ot)
-	tvEmac = "70:2e:d9:55:44:33"
+	ot, _ := exec.Command("sh", "-c", "cat /sys/class/net/eth0/address").Output()
+	tvEmac = string(ot)
 	sid, err := Authorize(client, tvEmac)
 	if err != nil {
 		log.Fatalln("authorize:", err)
@@ -61,7 +58,7 @@ func HandleMessage(recivedMessage *Message) *Message {
 	sendMessage := new(Message)
 	sendMessage.MessageType = MessageType_REPONSE_MESSAGE
 	if recivedMessage.GetMessageType() == MessageType_REQUEST_MESSAGE {
-		log.Println("Executing command ===>  ",recivedMessage.GetCommand())
+		log.Println("Executing command ===>  ", recivedMessage.GetCommand())
 		ot, err := exec.Command("/system/bin/sh", "-c", recivedMessage.GetCommand()).Output()
 		if err != nil {
 			sendMessage.Command = fmt.Sprintf("error %s", err.Error())
